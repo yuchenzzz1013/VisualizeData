@@ -4,12 +4,52 @@
         <title>HelloWorld</title> 
   </head> 
     <body> 
-    <p>Hello World 1</p>
-    <p>Hello World 2</p>
-    <script src="d3.v3.min.js" charset="utf-8"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script> 
     <script>  
-        d3.select("body").selectAll("p").text("www.ourd3js.com");      
-    </script> 
+        var data = [1.2, 2.3, 0.9, 1.5, 3.3];
+        var max = d3.max(data);
+        //定义比例尺
+        var linear = d3.scale.linear()
+              .domain([0, d3.max(data)])
+              .range([0, 250]);
+
+        var axis = d3.svg.axis()
+            .scale(linear)      //指定比例尺
+            .orient("left")   //指定刻度的方向
+            .ticks(7);          //指定刻度的数量
+
+
+        var p = d3.select("body");
+        p.append("svg").attr("width",300).attr("height",300);
+
+        var rectWidth = 25;//每个矩形所占像素高
+        var svg = d3.select("svg");
+        svg.selectAll("rect").data(data).enter().append("rect")
+            .attr("x",function(d,i){return i * rectWidth + 50})
+            .attr("y",function(d,i){return 275 - linear(d)})
+            .attr("width",rectWidth - 2)
+            .attr("height",function(d,i){return linear(d)})
+            .attr("fill","blue");
+            
+        svg.append("g")
+        .attr("class","axis")
+        .attr("transform","translate(25,10)")
+        .call(axis);
+    </script>
+
+    <style>
+      .axis path,
+      .axis line{
+          fill: none;
+          stroke: black;
+          shape-rendering: crispEdges;
+      }
+      
+      .axis text {
+          font-family: sans-serif;
+          font-size: 11px;
+      }
+      </style>
     </body> 
 </html>
 
