@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>China Map</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+<body>
+
+<script>
+    var width = 800;
+    var height = 600;
+    var color = d3.scaleOrdinal(d3.schemeCategory10); 
+    var svg = d3.select("body")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    var projection = d3.geoMercator()
+        .center([105, 35])  // 调整经纬度以居中显示中国
+        .scale(500)         // 调整缩放比例
+        .translate([width / 2, height / 2]);
+    var path = d3.geoPath().projection(projection);
+
+    d3.json("https://raw.githubusercontent.com/Ealodi/VisualizeData/master-branch/ChinaGeoFull.json").then(function(geoData) {
+        // 创建路径元素并绑定数据
+        svg.selectAll("path")
+            .data(geoData.features)
+            .enter()
+            .append("path")
+            .attr("fill","none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 1)
+            .attr("d", path);
+    }).catch(function(error) {
+        console.error("加载 GeoJSON 文件时发生错误：", error);
+    });
+</script>
+
+</body>
+</html>

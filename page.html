@@ -111,7 +111,7 @@
         //饼状图
         var width = 400,height = 400;
         var dataset = [ 30 , 10 , 43 , 55 , 13 ];
-        var color = d3.scaleOrdinal(d3.schemeCategory10); 
+        var color = d3.scaleOrdinal(d3.schemeCategory10);
         var pie = d3.pie();
         var piedata = pie(dataset);
         var outerRadius = 150; //外半径
@@ -166,26 +166,6 @@
                 return d.data;
             });
     </script>
-    <script>
-        //地图
-        var svg = d3.select("body")
-            .append("svg")
-            .attr("width", 500)
-            .attr("height", 500);
-        
-        d3.json("ChinaGeoFull.json").then(function(geoData){
-            var path = d3.geoPath();
-            var pathString = path(geoData);
-            console.log(pathString);
-            svg.append("path")
-                .attr("d", pathString)
-                .style("fill", "steelblue")
-                .style("stroke", "white");
-            }).catch(function(error) {
-            console.error("Error loading GeoJSON file:", error);
-        });
-    </script>
     </body> 
 </html>
-
 
