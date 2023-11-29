@@ -23,16 +23,34 @@
         .translate([width / 2, height / 2]);
     var path = d3.geoPath().projection(projection);
 
-    d3.json("https://raw.githubusercontent.com/Ealodi/VisualizeData/master-branch/ChinaGeoFull.json").then(function(geoData) {
+    Promise.all([
+        d3.csv("./2017.csv"),
+        d3.json("https://raw.githubusercontent.com/ELLENXX/d3-GeoJSON-/master/china.geo.json")
+    ]).then(function(data) {
+        console.log(data[1])
         // 创建路径元素并绑定数据
         svg.selectAll("path")
-            .data(geoData.features)
+            .data(data.features)
             .enter()
             .append("path")
-            .attr("fill","none")
+            .attr("fill","yellow")
             .attr("stroke", "steelblue")
             .attr("stroke-width", 1)
-            .attr("d", path);
+            .attr("d", path)
+            .on("mouseover",function(d,i){
+                d3.select(this)
+                    .transition()
+                    .duration(100)
+                    .attr("fill","#2CD8FF");
+            })
+            .on("mouseout",function(d,i){
+                d3.select(this)
+                    .transition()
+                    .duration(200)
+                    .attr("fill","yellow");
+            });
+
+            
     }).catch(function(error) {
         console.error("加载 GeoJSON 文件时发生错误：", error);
     });
