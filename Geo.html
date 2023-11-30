@@ -50,7 +50,7 @@
                 //把大学数量设置到属性里，方便取用
                 var name = d.properties.name;
                 var selectedData = data[0].filter(function(d) {
-                    return d.province === name; // 替换为你想要的省份值
+                    return d.province === name;
                 });
                 // 获取对应省份的大学数量
                 var universityCount = selectedData.length;
@@ -63,6 +63,9 @@
             .attr("stroke", "steelblue")
             .attr("stroke-width", 1)
             .attr("d", path)
+            .on("click",function(d,i){
+                console.log(d);
+            })
             .on("mouseover",function(d,i){
                 var universityCount = d3.select(this).attr("universityCount");
                 var name = d3.select(this).attr("name");
@@ -72,7 +75,7 @@
                 var centerY = bounds.y + bounds.height / 2;
                 // 显示数字
                 text_num.transition()
-                    .duration(200)
+                    .duration(100)
                     .style("opacity", .9);
                 text_num.html(name + "有 " + universityCount + " 所大学")
                     .style("left", (centerX + window.pageXOffset) + "px")
