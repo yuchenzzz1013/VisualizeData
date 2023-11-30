@@ -31,8 +31,8 @@
         .range(outputRange);
 
     //创建提示框
-    var tooltip = d3.select("body").append("div")
-        .attr("class", "tooltip")
+    var text_num = d3.select("body").append("div")
+        .attr("class", "text")
         .style("opacity", 0);
 
     Promise.all([
@@ -71,10 +71,10 @@
                 var centerX = bounds.x + bounds.width / 2;
                 var centerY = bounds.y + bounds.height / 2;
                 // 显示数字
-                tooltip.transition()
+                text_num.transition()
                     .duration(200)
                     .style("opacity", .9);
-                tooltip.html(name + "有 " + universityCount + " 所大学")
+                text_num.html(name + "有 " + universityCount + " 所大学")
                     .style("left", (centerX + window.pageXOffset) + "px")
                     .style("top", (centerY + window.pageXOffset) + "px");
                 
@@ -90,7 +90,7 @@
                     .duration(200)
                     .attr("fill",thresholdScale(universityCount));
                 // 删除数字
-                tooltip.transition()
+                text_num.transition()
                     .duration(500)
                     .style("opacity", 0);
             });
@@ -99,7 +99,7 @@
     });
 </script>
 <style>
-        .tooltip {
+        .text {
             position: absolute;
             text-align: left;
             padding: 5px;
