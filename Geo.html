@@ -64,7 +64,7 @@
             .attr("stroke-width", 1)
             .attr("d", path)
             .on("click",function(d,i){
-                event.preventDefault();
+                event.preventDefault();//严格点击后启动
                 if (d3.select(this).attr("name") == "湖北"){
                     var myElement = d3.select("svg");
                     var elementNode = myElement.node();
