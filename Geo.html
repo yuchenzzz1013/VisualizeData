@@ -65,11 +65,13 @@
             .attr("d", path)
             .on("click",function(d,i){
                 event.preventDefault();
-                var myElement = d3.select("svg");
-                var elementNode = myElement.node();
-                var rect = elementNode.getBoundingClientRect();
-                var x = rect.left + rect.width + 200,y = -608;
-                hubei(x,y);
+                if (d3.select(this).attr("name") == "湖北"){
+                    var myElement = d3.select("svg");
+                    var elementNode = myElement.node();
+                    var rect = elementNode.getBoundingClientRect();
+                    var x = rect.left + rect.width + 200,y = -608;
+                    hubei(x,y);
+                }
             })
             .on("mouseover",function(d,i){
                 var universityCount = d3.select(this).attr("universityCount");
