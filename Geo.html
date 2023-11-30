@@ -18,43 +18,97 @@
         .attr("height", height);
 
     var projection = d3.geoMercator()
-        .center([105, 35])  // 调整经纬度以居中显示中国
-        .scale(500)         // 调整缩放比例
+        .center([105, 35])  //调整经纬度以居中显示中国
+        .scale(500)         //调整缩放比例
         .translate([width / 2, height / 2]);
     var path = d3.geoPath().projection(projection);
+    //阈值比例尺
+    var inputDomain = [0, 50,100,200,300,400,999,999999];
+    var outputRange = d3.schemeBlues[9];
+    //创建阈值比例尺
+    var thresholdScale = d3.scaleThreshold()
+        .domain(inputDomain)
+        .range(outputRange);
+
+    //创建提示框
+    var tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
 
     Promise.all([
-        d3.csv("./2017.csv"),
-        d3.json("https://raw.githubusercontent.com/ELLENXX/d3-GeoJSON-/master/china.geo.json")
-    ]).then(function(data) {
-        console.log(data[1])
+        d3.csv("https://raw.githubusercontent.com/Ealodi/VisualizeData/master-branch/2017.csv"),
+        d3.json("https://raw.githubusercontent.com/Ealodi/VisualizeData/master-branch/china.geo.json")
+    ]).then(function(data){
+        //console.log(data[0]);
         // 创建路径元素并绑定数据
         svg.selectAll("path")
-            .data(data.features)
+            .data(data[1].features)
             .enter()
             .append("path")
-            .attr("fill","yellow")
+            .attr("name",function(d,i){return d.properties.name;})
+            .attr("universityCount",function(d,i){
+                //把大学数量设置到属性里，方便取用
+                var name = d.properties.name;
+                var selectedData = data[0].filter(function(d) {
+                    return d.province === name; // 替换为你想要的省份值
+                });
+                // 获取对应省份的大学数量
+                var universityCount = selectedData.length;
+                return universityCount;
+            })
+            .attr("fill",function(d,i){
+                var universityCount = d3.select(this).attr("universityCount");
+                return thresholdScale(universityCount);//线性颜色比例尺调用
+            })
             .attr("stroke", "steelblue")
             .attr("stroke-width", 1)
             .attr("d", path)
             .on("mouseover",function(d,i){
+                var universityCount = d3.select(this).attr("universityCount");
+                var name = d3.select(this).attr("name");
+                // 获取区块的中心坐标
+                var bounds = this.getBBox();
+                var centerX = bounds.x + bounds.width / 2;
+                var centerY = bounds.y + bounds.height / 2;
+                // 显示数字
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                tooltip.html(name + "有 " + universityCount + " 所大学")
+                    .style("left", (centerX + window.pageXOffset) + "px")
+                    .style("top", (centerY + window.pageXOffset) + "px");
+                
                 d3.select(this)
                     .transition()
                     .duration(100)
-                    .attr("fill","#2CD8FF");
+                    .attr("fill","yellow");
             })
             .on("mouseout",function(d,i){
+                var universityCount = d3.select(this).attr("universityCount");
                 d3.select(this)
                     .transition()
                     .duration(200)
-                    .attr("fill","yellow");
+                    .attr("fill",thresholdScale(universityCount));
+                // 删除数字
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
             });
 
             
-    }).catch(function(error) {
-        console.error("加载 GeoJSON 文件时发生错误：", error);
     });
 </script>
-
+<style>
+        .tooltip {
+            position: absolute;
+            text-align: left;
+            padding: 5px;
+            font: 12px sans-serif;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5;
+            pointer-events: none;
+        }
+</style>
 </body>
 </html>
