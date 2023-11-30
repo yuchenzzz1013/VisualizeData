@@ -228,18 +228,6 @@
 
         sort_flag = !sort_flag; // 切换顺序
       });
-
-      // 点击添加
-      d3.select('#btn-add').on('click', () => {
-        // 生成一个随机数字，模拟新的高效数量
-        let randomScoreline = Math.ceil(Math.random() * 50);
-        
-        // 随机选择一个省份，模拟添加数据
-        let randomIndex = Math.floor(Math.random() * dataList.length);
-        dataList[randomIndex].scoreline = randomScoreline;
-
-        refresh(); // 更新视图
-      });
     }
 
     // 视图初始化
