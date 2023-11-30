@@ -23,7 +23,7 @@
         .translate([width / 2, height / 2]);
     var path = d3.geoPath().projection(projection);
     //阈值比例尺
-    var inputDomain = [0, 50,100,200,300,400,999,999999];
+    var inputDomain = [0,50,100,150,200,300,450,650,1204];
     var outputRange = d3.schemeBlues[9];
     //创建阈值比例尺
     var thresholdScale = d3.scaleThreshold()
@@ -60,11 +60,21 @@
                 var universityCount = d3.select(this).attr("universityCount");
                 return thresholdScale(universityCount);//线性颜色比例尺调用
             })
-            .attr("stroke", "steelblue")
+            .attr("stroke", "#4f4343")
             .attr("stroke-width", 1)
             .attr("d", path)
             .on("click",function(d,i){
-                console.log(d);
+                document.getElementById('mapContainer').addEventListener('click', function() {
+                // 创建一个新的 iframe 元素
+                var iframe = document.createElement('iframe');
+                iframe.src = './湖北省分数线.html';  // 第二个 HTML 页面的路径
+                iframe.style.width = '50%';  // 设置 iframe 宽度
+                iframe.style.height = '100%';  // 设置 iframe 高度
+                iframe.style.float = 'right';  // 将 iframe 放置在右边
+
+                // 将 iframe 添加到 body 中
+                document.body.appendChild(iframe);
+                });
             })
             .on("mouseover",function(d,i){
                 var universityCount = d3.select(this).attr("universityCount");
@@ -93,7 +103,7 @@
                     .transition()
                     .duration(200)
                     .attr("stroke-width",1)
-                    .attr("stroke", "steelblue");
+                    .attr("stroke", "#4f4343");
                 // 删除数字
                 text_num.transition()
                     .duration(500)
